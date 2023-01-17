@@ -12,6 +12,7 @@ public class ChunkLoader : MonoBehaviour
     public Sprite[] spriteArray;
     private TextAsset Filecontent;
 
+    private ChunkWrapper cw;
 
     [Serializable]
     private class ChunkWrapper
@@ -66,9 +67,10 @@ public class ChunkLoader : MonoBehaviour
             }
         }
         this.path = "test1.json";
-        string Json = JsonUtility.ToJson(cw);
-        //ExportJson(Json);
         ChunkWrapper cl = ImportJson<ChunkWrapper>(this.path);
+        this.cw = cl;
+        
+        //ExportJson(Json);
         /*RenderChunk(cl,-1,0);
         RenderChunk(cl,-1,1);
         RenderChunk(cl,-1,-1);*/
@@ -93,8 +95,9 @@ public class ChunkLoader : MonoBehaviour
     {
     }
 
-    public void ExportJson(string json)
+    public void ExportJson()
     {
+        string json = JsonUtility.ToJson(this.cw);
         var sr = File.CreateText(this.path);
         sr.WriteLine(json);
         sr.Close();

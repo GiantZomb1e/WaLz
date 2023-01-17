@@ -26,10 +26,11 @@ def endpoint(args):
             r = {'row':row}
             chunk['Data'].append(r)
         new_jo['Chunks'].append(chunk)
+        print(os.getcwd()+'/test1.json')
+        with open(os.getcwd()+'/test1.json','w') as f:
+            json.dump(new_jo,f)
     except Exception as e:
         print(e)
-    with open(os.getcwd()+'/test1.json','w') as f:
-        json.dump(new_jo,f)
 
     return '200 OK'
 

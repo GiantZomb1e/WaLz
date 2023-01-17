@@ -60,8 +60,11 @@ class TileSVG {
 
     generate() {
         const tileSize = this.width / this.numTilesPerRow;
+        this.mousedown = false;
         this.svg.setAttributeNS(null, "width", this.width);
         this.svg.setAttributeNS(null, "height", this.width);
+        this.svg.addEventListener('mousedown',this.mouseDownHandler.bind(this))
+        this.svg.addEventListener('mouseup',this.mouseUpHandler.bind(this))
         const container = document.getElementById(this.id);
         container.innerHTML = "";
         container.appendChild(this.svg);
@@ -85,16 +88,32 @@ class TileSVG {
                 this.svg.appendChild(tileSvg);
                 this.tiles.push(tileSvg);
                 if (this.selector !== undefined) {
-                    rect.addEventListener('mousedown', () => this.mouseDownHandler.bind(this)(rect, tileSvg, this.numTilesPerRow-i,j))
+                    rect.addEventListener('mouseover', () => this.mouseOverHandler.bind(this)(rect, tileSvg, this.numTilesPerRow-i-1,j))
+                    rect.addEventListener('click', () => this.clickHandler.bind(this)(rect, tileSvg, this.numTilesPerRow-i-1,j))
                 }
             }
         }
     }
 
-    mouseDownHandler(rect, svg, y, x) {
-        let current_val = this.selector.getCurrentValue()
-        setBackgroundImage(svg, rect, current_val[2])
-        this.materials[y][x] = current_val[0]
+    mouseOverHandler(rect, svg, y, x) {
+        if(this.mousedown){
+            let current_val = this.selector.getCurrentValue()
+            setBackgroundImage(svg, rect, current_val[2])
+            this.materials[y][x] = current_val[0]
+        }
+    }
+    clickHandler(rect, svg, y, x) {
+            let current_val = this.selector.getCurrentValue()
+            setBackgroundImage(svg, rect, current_val[2])
+            this.materials[y][x] = current_val[0]
+    }
+
+    mouseUpHandler(){
+        this.mousedown = false
+    }
+
+    mouseDownHandler(){
+        this.mousedown = true
     }
 
     export() {
@@ -149,7 +168,7 @@ class ColorPicker {
 }
 
 class Dropdown {
-    constructor(id, width, height) {
+    constructor(id,cells, width, height) {
         this.id = id;
         this.width = width;
         this.height = height;
@@ -159,6 +178,7 @@ class Dropdown {
     }
 
     generate() {
+        
         this.dropdown = document.createElement("select");
         this.dropdown.classList.add("dropdown");
         this.dropdown.style.width = this.width + "px";

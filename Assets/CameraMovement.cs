@@ -9,7 +9,6 @@ public class CameraMovement : MonoBehaviour
    void FixedUpdate()
    {
      var position = GameObject.Find("Player").transform.position;
-     Debug.Log(position);
      gameObject.transform.position = new Vector3(position.x,position.y,-20);
    }
 }

@@ -4,26 +4,28 @@ using UnityEngine;
 
 public class PlayerBehaviour : MonoBehaviour
 {
-    public bool grounded = false;
-    public Rigidbody2D PlayerRigidBody2D;
-    public float walkspeed = 5;
-    public float jumpstrenght = 5;
+    public float maxSpeed = 0.50f;
+    public float moveSpeed = 1.00f;
+    public float jumpForce = 10.0f;
+    private Rigidbody2D rb;
+    private bool grounded;
     // Start is called before the first frame update
     void Start()
     {
         gameObject.transform.position = new Vector3(0f,0f,0f);
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-    public void OnCollisionEnter2D (Collision2D collide)
+    public void OnTriggerEnter2D (Collider2D collide)
     {
         Debug.Log("collision!");
-        if(collide.gameObject.tag == ("Tile"))
+        if(collide.gameObject.tag == ("Tile")  && collide.isTrigger)
         {
             grounded = true;
         }
@@ -31,24 +33,18 @@ public class PlayerBehaviour : MonoBehaviour
     }
     void FixedUpdate()
     {
-        if(grounded && Input.GetKey(KeyCode.Space))
-        {
-           grounded = false;
-           PlayerRigidBody2D.velocity = Vector2.up * jumpstrenght;
-        }
-        if (Input.GetKey(KeyCode.D) )
-        {
-            PlayerRigidBody2D.velocity = Vector2.right * walkspeed;
-        }
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
 
-        if (Input.GetKey(KeyCode.A) )
-        {
-            PlayerRigidBody2D.velocity = Vector2.left * walkspeed;
-        }
+        Vector2 moveDirection = new Vector2(horizontal, 0);
+        Vector3 newPosition = transform.position + new Vector3(moveDirection.x, moveDirection.y, 0) * moveSpeed;
+        transform.position = newPosition;
 
-        if (Input.GetKey(KeyCode.S) )
+        if (Input.GetKey(KeyCode.Space) && grounded)
         {
-            PlayerRigidBody2D.velocity = Vector2.down * walkspeed;
+            rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+            grounded = false;
         }
     }
 }
+
