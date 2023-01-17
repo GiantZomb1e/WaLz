@@ -9,7 +9,9 @@ public class ChunkLoader : MonoBehaviour
 {
     [NonSerialized]
     public string path;
+    public Sprite[] spriteArray;
     private TextAsset Filecontent;
+
 
     [Serializable]
     private class ChunkWrapper
@@ -58,15 +60,18 @@ public class ChunkLoader : MonoBehaviour
                     chunk.Data[y] = new ChunkWrapper.Row();
                     for (int x = 0; x < 50; x++)
                     {
-                        chunk.Data[y].row[x] = 2;
+                        chunk.Data[y].row[x] = UnityEngine.Random.Range(0,5);
                     }
                 }
             }
         }
-        this.path = "test3.json";
+        this.path = "test1.json";
         string Json = JsonUtility.ToJson(cw);
-        ExportJson(Json);
+        //ExportJson(Json);
         ChunkWrapper cl = ImportJson<ChunkWrapper>(this.path);
+        /*RenderChunk(cl,-1,0);
+        RenderChunk(cl,-1,1);
+        RenderChunk(cl,-1,-1);*/
         for (int y = 0; y < 50; y++)
         {
             for (int x = 0; x < 50; x++)
@@ -140,9 +145,10 @@ public class ChunkLoader : MonoBehaviour
                 int tile_y = 50 * y + y_idx;
 
                 int material = torender.Data[y_idx].row[x_idx];
-                if (material == 2)
-                {
-                    Instantiate(GameObject.Find("Tile"), new Vector3((float)tile_x, (float)tile_y, 0f), new Quaternion(0f, 0f, 0f, 0f));
+                if(material != 0){
+                GameObject Go = Instantiate(GameObject.Find("Tile"), new Vector3((float)tile_x, (float)tile_y, 0f), new Quaternion(0f, 0f, 0f, 0f));
+                SpriteRenderer renderer = Go.GetComponent<SpriteRenderer>();
+                renderer.sprite = spriteArray[material];
                 }
             }
         }
