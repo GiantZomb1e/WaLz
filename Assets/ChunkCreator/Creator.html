@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="script.js"></script>
+</head>
+<body>
+    <div id="feld"></div>
+    <div id="colorpicker"></div>
+    <div id="dropdown-container"></div>
+    <script>
+        const myColorPicker = new ColorPicker("colorpicker", 100);
+        myColorPicker.generate();
+        
+        const cells = [
+            [0, "Empty", "/texture?path=EmptySprite.png"],
+            [1, "Grass", "/texture?path=GrassSprite.png"],
+            [2, "Dirt", "/texture?path=DirtSprite.png"],
+            [3, "Rock", "/texture?path=RockSprit.png"],
+        ];
+        
+        const dropdown = new Dropdown("dropdown-container", cells);
+        dropdown.generate();
+        
+        const myTileSVG = new TileSVG("feld", 1200, 50,dropdown);
+        myTileSVG.generate();
+        send_materials = ()=>{sendData(myTileSVG.export())}
+    </script>
+
+    <button onclick="send_materials()">send</button>
+    
+</body>
+</html>
